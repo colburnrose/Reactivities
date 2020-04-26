@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Application.Activities;
@@ -24,5 +25,26 @@ namespace API.Controllers
             return activities;
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Activity>> Details(Guid id)
+        {
+            var activity = await _mediator.Send(new Details.Query{Id = id});
+            return activity;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Unit>> Create(Create.Command command)
+        {
+            var activity = await _mediator.Send(command);
+            return activity;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Unit>> Edit(Guid id, Edit.Command command)
+        {
+            command.Id = id;
+            var activity = await _mediator.Send(command);
+            return activity;
+        }
     }
 }
