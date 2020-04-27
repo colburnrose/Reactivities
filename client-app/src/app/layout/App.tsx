@@ -1,7 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, Fragment} from 'react';
 import axios from 'axios';
-import { Header, Icon, List } from 'semantic-ui-react'
+import { Header, Icon, List, Container } from 'semantic-ui-react'
 import { IActivity } from '../models/activities';
+import { NavBar } from '../../features/nav/NavBar';
 
 
 const App = () => {
@@ -16,11 +17,9 @@ const App = () => {
   }, [])
 
     return (
-      <div>
-        <Header as='h2'>
-          <Icon name='users' />
-        <Header.Content>Reactivities</Header.Content>
-        </Header>
+      <Fragment>
+        <NavBar />
+        <Container style={{marginTop: '7em'}}>
         <List link>
         {activities.map((activity) => (
             <ul>
@@ -33,7 +32,8 @@ const App = () => {
             </ul>
         ))}         
         </List>
-      </div>
+        </Container>
+      </Fragment>
     );
 }
 
