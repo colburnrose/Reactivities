@@ -3,11 +3,18 @@ import axios from 'axios';
 import { Header, Icon, List, Container } from 'semantic-ui-react'
 import { IActivity } from '../models/activities';
 import { NavBar } from '../../features/nav/NavBar';
+import ActivityDashboard from '../../features/activities/dashboard/ActivityDashboard';
+
 
 
 const App = () => {
 
   const [activities, setActivities] = useState<IActivity[]>([])
+  const [selectedActivity, setSelectedActivity] = useState<IActivity | null>(null);
+
+  const handleSelectActivity = (id: string) => {
+    setSelectedActivity(activities.filter(a => a.id === id)[0])
+  }
 
   useEffect(() => {
     axios.get<IActivity[]>('http://localhost:5000/api/activities')
@@ -20,18 +27,11 @@ const App = () => {
       <Fragment>
         <NavBar />
         <Container style={{marginTop: '7em'}}>
-        <List link>
-        {activities.map((activity) => (
-            <ul>
-              <List.Item key={activity.id}>{activity.title}</List.Item>
-              <List.Item key={activity.id}>{activity.description}</List.Item>
-              <List.Item key={activity.id}>{activity.category}</List.Item>
-              <List.Item key={activity.id}>{activity.date}</List.Item>
-              <List.Item key={activity.id}>{activity.city}</List.Item>
-              <List.Item key={activity.id}>{activity.venue}</List.Item>
-            </ul>
-        ))}         
-        </List>
+          <ActivityDashboard 
+          activities={activities} 
+          selectActivity={handleSelectActivity}
+          selectedActivity={selectedActivity}
+          />
         </Container>
       </Fragment>
     );
