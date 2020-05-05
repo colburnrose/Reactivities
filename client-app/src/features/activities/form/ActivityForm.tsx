@@ -1,14 +1,21 @@
 import React, {useState, FormEvent} from 'react'
 import { Segment, Form, Button } from 'semantic-ui-react';
 import { IActivity } from '../../../app/models/activities';
-
+import {v4 as uuid} from 'uuid';
 
 interface IProps {
     setEditMode: (editMode: boolean) => void;
     activity: IActivity;
+    createActivity: (activity: IActivity) => void;
+    editActivity: (activity: IActivity) => void;
 }
 
-export const ActivityForm: React.FC<IProps> = ({setEditMode, activity: initialFormState}) => {
+export const ActivityForm: React.FC<IProps> = ({
+    setEditMode, 
+    activity: initialFormState,
+    createActivity,
+    editActivity
+}) => {
 
     const intializeForm = () => {
         if(initialFormState) {
@@ -35,6 +42,15 @@ export const ActivityForm: React.FC<IProps> = ({setEditMode, activity: initialFo
 
     const handleSubmit = () => {
         console.log(activity);
+        if(activity.id.length === 0){
+            let newActivity = {
+                ...activity,
+                id: uuid()
+            }
+            createActivity(newActivity);
+        }else {
+            editActivity(activity);
+        }
     }
 
     return (
@@ -43,7 +59,7 @@ export const ActivityForm: React.FC<IProps> = ({setEditMode, activity: initialFo
                 <Form.Input onChange={handleChangeInput} name='title' placeholder='Title' value={activity.title} />
                 <Form.TextArea onChange={handleChangeInput} rows={2} name='description' placeholder='Description' value={activity.description}/>
                 <Form.Input onChange={handleChangeInput} name='category' placeholder='Category' value={activity.category}/>
-                <Form.Input onChange={handleChangeInput} name='date' type='Date' placeholder='Date' value={activity.date}/>
+                <Form.Input onChange={handleChangeInput} name='date' type='datetime-local' placeholder='Date' value={activity.date}/>
                 <Form.Input onChange={handleChangeInput} name='city' placeholder='City' value={activity.city}/>
                 <Form.Input onChange={handleChangeInput} name='venue' placeholder='Venue' value={activity.venue}/>
                 <Button floated='right' positive type='submit' content='Submit'/>
